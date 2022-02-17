@@ -43,12 +43,12 @@ function Weather() {
             <div className='mainDiv'>
                 <div className='inputDiv container'>
                     <input
-                        placeholder='Enter Your City'
+                        placeholder='Enter Your City/Country'
                         type="text"
                         className="input-group form-control mx-2"
                         onChange={(e) => { setCityName(e.target.value) }} />
 
-                    <button className='btn btn-dark' onClick={fireApi}>Call Api</button>
+                    <button className='btn' onClick={fireApi}>Check</button>
                 </div>
 
                 <div className='midDiv'>
