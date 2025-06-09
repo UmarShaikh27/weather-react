@@ -6,30 +6,33 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 .mainDiv{
-    height: 100vh;
-    width: 100vw;
+    min-height: 100vh;
+    width: 100%;
     display: flex;
     flex-direction: column;
-    /* align-items: center; */
     background: linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3));
-
+    padding: 1rem;
 }
 
 .bgImage{
     width: 100%;
     height: 100vh;
-    position: absolute;
+    position: fixed;
     z-index: -1;
+    object-fit: cover;
 }
+
 .inputDiv{
     margin-top: 5px;
     display: flex;
     flex-direction: row;
-    align-self: flex-start;
-    justify-self: flex-start;
-    width: 40%;
-
+    align-items: center;
+    width: 90%;
+    max-width: 600px;
+    margin: 1rem auto;
+    gap: 1rem;
 }
+
 .input-group,.input-group:focus{
     background: transparent;
     outline: none;
@@ -38,60 +41,154 @@
     box-shadow: none;
     border-bottom: 1px solid black;
     color: white;
-
+    flex: 1;
+    min-width: 0;
+    padding: 0.5rem;
 }
 
 .btn{
     border-radius: 16px;
     background-color: #F0DFAD;
     transition: all 0.5s;
+    padding: 0.5rem 1rem;
+    white-space: nowrap;
 }
+
 .btn:hover{
     background-color: #FFD791;
     transform: scale(1.04)
 }
+
 .midDiv{
     display: flex;
-    align-items: center;
+    align-items: stretch;
     flex-direction: row;
     justify-content: space-between;
     list-style: none;
-    margin-top: 110px;
+    margin-top: 2rem;
     color: white;
     font-family: 'Roboto', sans-serif;
+    backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+    padding: 1.5rem;
+    margin: 1rem;
+    flex-wrap: wrap;
+    gap: 2rem;
 }
+
 .otherDiv{
-    width: 25%;
+    flex: 1;
+    min-width: 200px;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    text-align: center;
 }
+
 .otherDiv h2{
     font-weight: bold;
-    margin-bottom: 40px;
+    margin-bottom: 1.5rem;
+    font-size: clamp(1.2rem, 2.5vw, 2rem);
 }
+
 .otherDiv h5{
     color: #F0DFAD;
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
 }
 
 .forecastDiv{
-    width: 50%;
+    flex: 2;
+    min-width: 300px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    
-    
+    padding: 1rem;
 }
+
 .countryName{
-    font-size: 50px;
-    
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    text-align: center;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .temp{
-    
-    /* font-weight: bold; */
-    font-size: 60px;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
 
+.weather-icon {
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+    transition: transform 0.3s ease;
+    font-size: clamp(3rem, 8vw, 5rem) !important;
+}
+
+.weather-icon:hover {
+    transform: scale(1.1);
+}
+
+.unit-toggle {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 1rem 0;
+}
+
+.alert {
+    width: 90% !important;
+    max-width: 600px;
+    margin: 1rem auto !important;
+}
+
+@media (max-width: 768px) {
+    .midDiv {
+        flex-direction: column;
+        margin: 0.5rem;
+        padding: 1rem;
+    }
+
+    .otherDiv {
+        width: 100%;
+        padding: 1rem 0;
+    }
+
+    .forecastDiv {
+        width: 100%;
+        order: -1;
+    }
+
+    .inputDiv {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .input-group {
+        width: 100%;
+        margin: 0 0 1rem 0;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .countryName {
+        font-size: 2rem;
+    }
+
+    .temp {
+        font-size: 3rem;
+    }
+
+    .otherDiv h2 {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+    }
+
+    .otherDiv h5 {
+        font-size: 1rem;
+    }
 }
