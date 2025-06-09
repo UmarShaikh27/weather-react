@@ -1,41 +1,58 @@
 import React, { useEffect, useState } from 'react'
 import './style.css'
-import dayimg from "./images/daytime.jpg"
-import { WiDaySunny, WiCloud, WiRain, WiSnow, WiThunderstorm, WiFog } from 'react-icons/wi'
+import dayimg from "./images/backgrounds/daytime.jpg"
+import nightimg from "./images/backgrounds/night.jpg"
+import morningimg from "./images/backgrounds/morning.jpg"
+import eveningimg from "./images/backgrounds/evening.jpg"
+import { WiDaySunny, WiCloud, WiRain, WiSnow, WiThunderstorm, WiFog, WiNightClear, WiNightCloudy } from 'react-icons/wi'
 
 function Weather() {
-    const currentTime = new Date()
-    const theDate = currentTime.getDate()
-    const theMonth = currentTime.getMonth() + 1
-    const theFullYear = currentTime.getFullYear()
-
     const [weatherApi, setweatherApi] = useState(null)
     const [cityName, setCityName] = useState("karachi")
     const [cityInput, setCityInput] = useState("karachi")
     const [error, setError] = useState("")
     const [isLoading, setIsLoading] = useState(false)
-    const [isCelsius, setIsCelsius] = useState(true)
-
-    const getWeatherIcon = (weatherMain) => {
+    const [localTime, setLocalTime] = useState(new Date())
+      const getWeatherIcon = (weatherMain, hours) => {
+        const isNight = hours < 6 || hours >= 18;
+        
         switch(weatherMain?.toLowerCase()) {
-            case 'clear': return <WiDaySunny className="weather-icon" />;
-            case 'clouds': return <WiCloud className="weather-icon" />;
-            case 'rain': return <WiRain className="weather-icon" />;
-            case 'snow': return <WiSnow className="weather-icon" />;
-            case 'thunderstorm': return <WiThunderstorm className="weather-icon" />;
+            case 'clear':
+                return isNight ? <WiNightClear /> : <WiDaySunny />;
+            case 'clouds':
+                return isNight ? <WiNightCloudy /> : <WiCloud />;
+            case 'rain':
+                return <WiRain />;
+            case 'snow':
+                return <WiSnow />;
+            case 'thunderstorm':
+                return <WiThunderstorm />;
             case 'mist':
             case 'fog':
-                return <WiFog className="weather-icon" />;
-            default: return <WiDaySunny className="weather-icon" />;
+            case 'haze':
+                return <WiFog />;
+            default:
+                return isNight ? <WiNightClear /> : <WiDaySunny />;
         }
-    }
+    };
 
-    const convertTemp = (temp) => {
-        if (!isCelsius) {
-            return ((temp * 9/5) + 32).toFixed(1);
+    const getBackgroundImage = (hours) => {
+        if (hours >= 5 && hours < 12) {
+            return morningimg; // Morning: 5 AM to 11:59 AM
+        } else if (hours >= 12 && hours < 17) {
+            return dayimg; // Day: 12 PM to 4:59 PM
+        } else if (hours >= 17 && hours < 20) {
+            return eveningimg; // Evening: 5 PM to 7:59 PM
+        } else {
+            return nightimg; // Night: 8 PM to 4:59 AM
         }
-        return temp;
-    }
+    };
+
+    const calculateLocalTime= (timezone) => {
+        const localTime = new Date();
+        const utc = localTime.getTime() + (localTime.getTimezoneOffset() * 60000);
+        return new Date(utc + (1000 * timezone));
+    };
 
     const fireApi = () => {
         if (!cityName.trim()) {
@@ -59,6 +76,9 @@ function Weather() {
                     setweatherApi(null)
                 } else {
                     setweatherApi(data)
+                    // Calculate local time using timezone offset from API
+                    const cityLocalTime = calculateLocalTime(data.timezone);
+                    setLocalTime(cityLocalTime);
                 }
             } catch (err) {
                 setError("Failed to fetch weather data. Please try again.")
@@ -71,13 +91,25 @@ function Weather() {
         fetchWeather()
     }, [cityInput])
 
+    const formatTime = (date) => {
+        return date.toLocaleTimeString('en-US', { 
+            hour: '2-digit', 
+            minute: '2-digit',
+            hour12: true 
+        });
+    };
+
     return (
         <div>
-            <img className='bgImage' src={dayimg} alt="" />
+            <img 
+                className='bgImage' 
+                src={getBackgroundImage(localTime.getHours())} 
+                alt="weather background" 
+            />
             <div className='mainDiv'>
                 <div className='inputDiv container'>
                     <input
-                        placeholder='Enter Your City/Country'
+                        placeholder='Enter city,country (e.g., London,GB)'
                         type="text"
                         className="input-group form-control mx-2"
                         value={cityName}
@@ -86,21 +118,6 @@ function Weather() {
                     />
                     <button className='btn' onClick={fireApi} disabled={isLoading}>
                         {isLoading ? 'Loading...' : 'Check'}
-                    </button>
-                </div>
-
-                <div className="unit-toggle mt-2">
-                    <button 
-                        className={`btn btn-sm ${isCelsius ? 'btn-primary' : 'btn-outline-primary'}`}
-                        onClick={() => setIsCelsius(true)}
-                    >
-                        °C
-                    </button>
-                    <button 
-                        className={`btn btn-sm ms-2 ${!isCelsius ? 'btn-primary' : 'btn-outline-primary'}`}
-                        onClick={() => setIsCelsius(false)}
-                    >
-                        °F
                     </button>
                 </div>
 
@@ -114,19 +131,19 @@ function Weather() {
                     <div className='midDiv'>
                         <div className='otherDiv'>
                             <h5>Wind Speed</h5>
-                            <h2>{weatherApi.wind?.speed} m/s</h2>
+                            <h2>{weatherApi.wind?.speed}</h2>
                             <h5>Min/Max Temperature</h5>
-                            <h2>{convertTemp(weatherApi.main?.temp_min)}/{convertTemp(weatherApi.main?.temp_max)}°{isCelsius ? 'C' : 'F'}</h2>
-                        </div>
-                        <div className='forecastDiv'>
-                            <h2 className='countryName my-0'>{weatherApi.name}, {weatherApi.sys?.country}</h2>
-                            <h6 style={{ marginBottom: "20px" }}>{theDate}/{theMonth}/{theFullYear}</h6>
+                            <h2>{weatherApi.main?.temp_min}/{weatherApi.main?.temp_max}°C</h2>
+                        </div>                        <div className='forecastDiv'>
+                            <h2 className='countryName my-0'>{weatherApi.name}, {weatherApi.sys?.country}</h2>                            <h6 style={{ marginBottom: "20px" }}>
+                                Local Time: {formatTime(localTime)}
+                            </h6>
                             <div style={{ fontSize: '5rem', color: '#F0DFAD' }}>
-                                {getWeatherIcon(weatherApi.weather?.[0]?.main)}
+                                {getWeatherIcon(weatherApi.weather?.[0]?.main, localTime.getHours())}
                             </div>
-                            <h1 className='temp my-0'>{convertTemp(weatherApi.main?.temp)}°{isCelsius ? 'C' : 'F'}</h1>
+                            <h1 className='temp my-0'>{weatherApi.main?.temp}°C</h1>
                             <h3>- - - - - - - - - - - - -</h3>
-                            <h6>{weatherApi.weather?.[0]?.main} - {weatherApi.weather?.[0]?.description}</h6>
+                            <h6>{weatherApi.weather?.[0]?.main}</h6>
                         </div>
                         <div className='otherDiv'>
                             <h5>Humidity</h5>
