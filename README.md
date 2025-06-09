@@ -1,14 +1,22 @@
 # Modern Weather App
 
-A responsive weather application built with React that provides real-time weather information for any city in the world.
+A responsive weather application built with React that provides real-time weather information for any city in the world. Features dynamic backgrounds and weather icons that adapt to local time and weather conditions.
 
-![Weather App Screenshot](./src/Components/images/daytime.jpg)
+![Weather App Screenshot](./src/Components/images/backgrounds/daytime.jpg)
 
 ## Features
 
 - **Real-Time Weather Data**: Get current weather conditions for any city worldwide
-- **Dynamic Weather Icons**: Weather icons that change based on current conditions
-- **Temperature Unit Toggle**: Switch between Celsius and Fahrenheit
+- **Dynamic Time-Based Backgrounds**: 
+  - Morning scene (5 AM - 11:59 AM)
+  - Day scene (12 PM - 4:59 PM)
+  - Evening scene (5 PM - 7:59 PM)
+  - Night scene (8 PM - 4:59 AM)
+- **Intelligent Weather Icons**: 
+  - Different icons for various weather conditions (sunny, cloudy, rain, snow, etc.)
+  - Day/night variants for clear and cloudy conditions
+  - Animated icon transitions
+- **Local Time Display**: Shows the current local time for each city
 - **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
 - **Error Handling**: User-friendly error messages for invalid city names or API issues
 - **Clean UI**: Beautiful, minimalist interface with blur effects and smooth transitions
@@ -24,13 +32,31 @@ A responsive weather application built with React that provides real-time weathe
 
 - React.js
 - OpenWeatherMap API
+- React Icons (Weather Icons)
 - CSS3 with Flexbox
 - Bootstrap for UI components
+- Firebase Hosting
+- Dynamic time-based UI components
+
+## Deployment
+
+This app is hosted on Firebase. You can access it at:
+- https://weather-react-bmj.web.app/
+
+To deploy new changes:
+1. Build the production version: `npm run build`
+2. Deploy to Firebase: `firebase deploy`
 
 ## API Documentation
 
 ### OpenWeatherMap API Integration
-This project utilizes the OpenWeatherMap API to fetch real-time weather data. Here's how it's implemented:
+This project utilizes the OpenWeatherMap API to fetch real-time weather data and local time information. Here's how it's implemented:
+
+#### Key Features
+- Real-time weather conditions
+- Local time calculation using timezone data
+- Dynamic icon selection based on weather and time
+- Detailed weather metrics
 
 #### Endpoint Used
 ```
